@@ -121,19 +121,24 @@ def register():
 def login():
     cursor = db.cursor()
     if request.method == "POST":
-        usersname = request.form['username']
+        email = request.form['email']
         password_1 = request.form['password']
         #print(password_1)
         #print(request.form['username'])
-        sql = 'SELECT FROM users WHERE email = %s;'
-        input_data = [usersname]
+        sql = 'SELECT * FROM users WHERE email = %s;'
+        input_data = [email]
         cursor.execute(sql, input_data)
-        password = cursor.fetchone()
-        print(password[0])
-        if sha256_crypt.verify(password_1, password[0]):
-            return "SUCCESS" 
+        user = cursor.fetchone()
+        if user == None :
+            print(user)
+            return redirect('/register')
         else:
-            return password[0]
+            if sha256_crypt.verify(password_1, user[4]):
+                return redirect('/articles') 
+            else:
+                return user[4]
+    else:
+        return render_template("login.html")
 
 if __name__ == '__main__':
     app.run()
