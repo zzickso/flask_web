@@ -37,13 +37,13 @@
                     <tbody>
                       {% for article in articles %}
                         <tr>
-                          <th scope="row">{{ article[0] }}</th>
+                          <th scope="row">{{ article[0]}}</th>
                           <td><a href="/article/{{article[0]}}">{{ article[1] }}</a></td>
                           <td>{{ article[2] }}</td>
                           <td>{{ article[3] }}</td>
                           <td>{{ article[4] }}</td>
                           <td>
-                          <button type="button" class="btn btn-warning">Edit</button>
+                          <a href="{{ article[0]}}/edit"><button type="button" class="btn btn-warning">Edit</button><a>
                           <form action="/delete/{{article[0]}}" style="margin: 10%;" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까')">
                           <button type="submit" class="btn btn-danger">DEL</button>
                           </form>
