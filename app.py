@@ -79,7 +79,7 @@ def delete(id):
     db.commit()
     return redirect("/articles")
 
-@app.route('/edit/<int:id>', methods=["POST", "GET"])
+@app.route('/<int:id>/edit', methods=["POST", "GET"])
 def edit(id):
     cursor = db.cursor()
     if request.method == "POST":
