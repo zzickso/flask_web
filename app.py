@@ -81,12 +81,16 @@ def delete(id):
 
 @app.route('/edit/<int:id>', methods=["POST", "GET"])
 def edit(id):
+    cursor = db.cursor()
     if request.method == "POST":
         return "Success"
 
     else:
-        return render_template("edit_article.html")
-
+        sql = "SELECT * FROM topic WHERE id = {}".format(id)
+        cursor.execute(sql)
+        topic = cursor.fetchone()
+        print(topic[1])
+        return render_template("edit_article.html", article = topic)
 
 
 if __name__ == '__main__':
