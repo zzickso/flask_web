@@ -17,33 +17,33 @@ db = pymysql.connect(
 
 @app.route('/', methods=['GET'])
 def home():
-    curssor = db.cursor()
+    cursor = db.cursor()
     # return "Hello World"
     return render_template("home.html")
 
 @app.route('/about')
 def about():
-    curssor = db.cursor()
+    cursor = db.cursor()
     return render_template("about.html", hello = "Gary Kim")
 
 @app.route('/articles')
 def articles():
-    curssor = db.cursor()
+    cursor = db.cursor()
     sql = 'select * from topic;'
-    curssor.execute(sql)
-    topics = curssor.fetchall()
-    print(topics)
+    cursor.execute(sql)
+    topics = cursor.fetchall()
+    #print(topics)
     # articles = Articles()
     # print(articles[0]['title'])
     return render_template("articles.html", articles = topics)
 
 @app.route('/article/<int:id>')
 def article(id):
-    curssor = db.cursor()
+    cursor = db.cursor()
     sql = 'select * from topic WHERE id={};'.format(id)
-    curssor.execute(sql)
-    topic = curssor.fetchone()
-    print(topic)
+    cursor.execute(sql)
+    topic = cursor.fetchone()
+    #print(topic)
     #articles = Articles()
     #article = articles[id-1]
     #print(articles[id-1])
@@ -51,7 +51,7 @@ def article(id):
 
 @app.route('/add_articles', methods = ["GET", "POST"])
 def add_articles():
-    curssor = db.cursor()
+    cursor = db.cursor()
     if request.method == "POST":
         desc = request.form['desc']
         author = request.form['author']
@@ -60,9 +60,9 @@ def add_articles():
         sql_1 = "INSERT INTO `topic` (`title`, `body`, `author`) VALUES (%s, %s, %s);"
         input_data = [title,desc,author]
 
-        curssor.execute(sql_1, input_data)
+        cursor.execute(sql_1, input_data)
         db.commit()
-        print(curssor.rowcount)
+        #print(curssor.rowcount)
         #db.close()
 
         return redirect("/articles")
@@ -72,10 +72,10 @@ def add_articles():
 
 @app.route('/delete/<int:id>' , methods=['POST'])
 def delete(id):
-    curssor = db.cursor()
+    cursor = db.cursor()
     sql = 'DELETE FROM topic WHERE id= %s;'
     id = [id]
-    curssor.execute(sql, id)
+    cursor.execute(sql, id)
     db.commit()
     return redirect("/articles")
 
@@ -83,13 +83,20 @@ def delete(id):
 def edit(id):
     cursor = db.cursor()
     if request.method == "POST":
-        return "Success"
-
+        title = request.form['title']
+        desc = request.form['desc']
+        sql = 'UPDATE topic SET title = %s, body = %s WHERE id = {};'.format(id)
+        input_data = [title, desc]
+        cursor.execute(sql, input_data)
+        db.commit()
+        print(request.form['title'])
+        return redirect("/articles")
+        
     else:
         sql = "SELECT * FROM topic WHERE id = {}".format(id)
         cursor.execute(sql)
         topic = cursor.fetchone()
-        print(topic[1])
+        #print(topic[1])
         return render_template("edit_article.html", article = topic)
 
 
